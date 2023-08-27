@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/emersion/go-smtp"
-	"github.com/nullcosmos/discord-smtp-server/discord"
 )
 
 func TestNewBackend(t *testing.T) {
