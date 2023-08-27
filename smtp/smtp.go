@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/emersion/go-smtp"
-	"github.com/nullcosmos/discord-smtp-server/email"
 )
 
 type Backend struct {
