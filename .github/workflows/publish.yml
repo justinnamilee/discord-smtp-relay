@@ -59,14 +59,14 @@ jobs:
     
     ## Builds our docker image!
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag kylegrantlucas/docker-smtp-server:$(date +%s)
+      run: docker build . --file Dockerfile --tag nullcosmos/docker-smtp-server:$(date +%s)
 
     ## Publishes our image to Docker Hub
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         ## the name of our image
-        name: kylegrantlucas/docker-smtp-server
+        name: nullcosmos/docker-smtp-server
         ## Here we pass in our Docker Username
         username: ${{ secrets.DOCKER_USERNAME }}
         ## and our Docker password which 

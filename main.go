@@ -6,7 +6,7 @@ import (
 	"time"
 
 	gosmtp "github.com/emersion/go-smtp"
-	"github.com/kylegrantlucas/discord-smtp-server/smtp"
+	"github.com/nullcosmos/discord-smtp-server/smtp"
 )
 
 func main() {

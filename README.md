@@ -19,14 +19,14 @@ docker run -t discord-smtp \
            -e DISCORD_WEBHOOK_URI=xxxxxxxxxxxx \
            -e SMTP_USERNAME=username \
            -e SMTP_PASSWORD=password \
-           kylegrantlucas/discord-smtp-server
+           nullcosmos/discord-smtp-server
 ```
 
 #### Compose
 
 ```
 discord-smtp:
-  image: kylegrantlucas/discord-smtp-server
+  image: nullcosmos/discord-smtp-server
   container_name: discord-smtp
   env:
     - PORT=25
