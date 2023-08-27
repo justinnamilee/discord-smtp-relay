@@ -9,24 +9,18 @@ import (
 	"net/http"
 
 	"github.com/emersion/go-smtp"
-	"github.com/kylegrantlucas/discord-smtp-server/discord"
-	"github.com/kylegrantlucas/discord-smtp-server/email"
+	"github.com/nullcosmos/discord-smtp-server/email"
 )
 
 type Backend struct {
-	discordClient *discord.Client
+	discordWebhookUri string
 	username      string
 	password      string
 }
 
-func NewBackend(discordToken, username, password string) (*Backend, error) {
-	discordClient, err := discord.NewClient(discordToken)
-	if err != nil {
-		return nil, err
-	}
-
+func NewBackend(discordWebhookUri, username, password string) (*Backend, error) {
 	return &Backend{
-		discordClient: discordClient,
+		discordWebhookUri: discordWebhookUri,
 		username:      username,
 		password:      password,
 	}, nil
@@ -57,28 +51,7 @@ func (s *Session) Mail(from string, opts smtp.MailOptions) error {
 }
 
 func (s *Session) Rcpt(to string) error {
-	address, err := email.Parse(to)
-	if err != nil {
-		return err
-	}
-
-	guildID, err := s.backend.discordClient.GetGuildID(address.TLD)
-	if err != nil {
-		return err
-	}
-
-	channelID, err := s.backend.discordClient.GetChannelID(*guildID, address.Domain)
-	if err != nil {
-		return err
-	}
-
-	webhook, err := s.backend.discordClient.GetWebhook(address.User, *channelID)
-	if err != nil {
-		return err
-	}
-
-	s.webhook = *webhook
-
+	s.webhook = s.backend.discordWebhookUri
 	return nil
 }
 

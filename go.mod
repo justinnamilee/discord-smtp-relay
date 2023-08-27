@@ -1,4 +1,4 @@
-module github.com/kylegrantlucas/discord-smtp-server
+module github.com/nullcosmos/discord-smtp-server
 
 go 1.15
 

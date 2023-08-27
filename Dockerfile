@@ -4,6 +4,7 @@ RUN apk update && apk upgrade && \
     apk add --no-cache ca-certificates
 COPY . .
 
+RUN go mod init github.com/nullcosmos/discord-smtp-server/email
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -o discord-smtp .
 
 FROM scratch

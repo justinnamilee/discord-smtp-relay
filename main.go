@@ -11,7 +11,7 @@ import (
 
 func main() {
 	backend, err := smtp.NewBackend(
-		os.Getenv("DISCORD_TOKEN"),
+		os.Getenv("DISCORD_WEBHOOK_URI"),
 		os.Getenv("SMTP_USERNAME"),
 		os.Getenv("SMTP_PASSWORD"),
 	)

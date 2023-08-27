@@ -11,7 +11,7 @@ import (
 
 func TestNewBackend(t *testing.T) {
 	type args struct {
-		discordToken string
+		discordWebhookUri string
 		username     string
 		password     string
 	}
@@ -25,7 +25,7 @@ func TestNewBackend(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewBackend(tt.args.discordToken, tt.args.username, tt.args.password)
+			got, err := NewBackend(tt.args.discordWebhookUri, tt.args.username, tt.args.password)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewBackend() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -39,7 +39,7 @@ func TestNewBackend(t *testing.T) {
 
 func TestBackend_Login(t *testing.T) {
 	type fields struct {
-		discordClient *discord.Client
+		discordWebhookUri string
 		username      string
 		password      string
 	}
@@ -60,7 +60,7 @@ func TestBackend_Login(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Backend{
-				discordClient: tt.fields.discordClient,
+				discordWebhookUri: tt.fields.discordWebhookUri,
 				username:      tt.fields.username,
 				password:      tt.fields.password,
 			}
@@ -78,7 +78,7 @@ func TestBackend_Login(t *testing.T) {
 
 func TestBackend_AnonymousLogin(t *testing.T) {
 	type fields struct {
-		discordClient *discord.Client
+		discordWebhookUri string
 		username      string
 		password      string
 	}
@@ -97,7 +97,7 @@ func TestBackend_AnonymousLogin(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Backend{
-				discordClient: tt.fields.discordClient,
+				discordWebhookUri: tt.fields.discordWebhookUri,
 				username:      tt.fields.username,
 				password:      tt.fields.password,
 			}
