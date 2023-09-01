@@ -1,25 +1,22 @@
 package smtp
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
-	"net/http"
 
 	"github.com/emersion/go-smtp"
+	"github.com/nullcosmos/discord-smtp-server/discord"
 )
 
 type Backend struct {
-	discordWebhookUri string
+	discord       *discord.Session
 	username      string
 	password      string
 }
 
-func NewBackend(discordWebhookUri, username, password string) (*Backend, error) {
+func NewBackend(discord *discord.Session, username, password string) (*Backend, error) {
 	return &Backend{
-		discordWebhookUri: discordWebhookUri,
+		discord:       discord,
 		username:      username,
 		password:      password,
 	}, nil
@@ -50,36 +47,11 @@ func (s *Session) Mail(from string, opts smtp.MailOptions) error {
 }
 
 func (s *Session) Rcpt(to string) error {
-	s.webhook = s.backend.discordWebhookUri
 	return nil
 }
 
 func (s *Session) Data(r io.Reader) error {
-	b, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-
-	reqBody, err := json.Marshal(
-		map[string]string{
-			"content": string(b),
-		},
-	)
-	if err != nil {
-		return err
-	}
-
-	resp, err := http.Post(
-		s.webhook,
-		"application/json",
-		bytes.NewBuffer(reqBody),
-	)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	return nil
+	return s.backend.discord.Send(r)
 }
 
 func (s *Session) Reset() {}

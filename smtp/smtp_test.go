@@ -6,11 +6,12 @@ import (
 	"testing"
 
 	"github.com/emersion/go-smtp"
+	"github.com/nullcosmos/discord-smtp-server/discord"
 )
 
 func TestNewBackend(t *testing.T) {
 	type args struct {
-		discordWebhookUri string
+		discord      *discord.Session
 		username     string
 		password     string
 	}
@@ -24,7 +25,7 @@ func TestNewBackend(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewBackend(tt.args.discordWebhookUri, tt.args.username, tt.args.password)
+			got, err := NewBackend(tt.args.discord, tt.args.username, tt.args.password)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewBackend() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -38,7 +39,7 @@ func TestNewBackend(t *testing.T) {
 
 func TestBackend_Login(t *testing.T) {
 	type fields struct {
-		discordWebhookUri string
+		discord      *discord.Session
 		username      string
 		password      string
 	}
@@ -59,7 +60,7 @@ func TestBackend_Login(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Backend{
-				discordWebhookUri: tt.fields.discordWebhookUri,
+				discord:       tt.fields.discord,
 				username:      tt.fields.username,
 				password:      tt.fields.password,
 			}
@@ -77,7 +78,7 @@ func TestBackend_Login(t *testing.T) {
 
 func TestBackend_AnonymousLogin(t *testing.T) {
 	type fields struct {
-		discordWebhookUri string
+		discord       *discord.Session
 		username      string
 		password      string
 	}
@@ -96,7 +97,7 @@ func TestBackend_AnonymousLogin(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Backend{
-				discordWebhookUri: tt.fields.discordWebhookUri,
+				discord:       tt.fields.discord,
 				username:      tt.fields.username,
 				password:      tt.fields.password,
 			}

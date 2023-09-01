@@ -7,11 +7,17 @@ import (
 
 	gosmtp "github.com/emersion/go-smtp"
 	"github.com/nullcosmos/discord-smtp-server/smtp"
+	"github.com/nullcosmos/discord-smtp-server/discord"
 )
 
 func main() {
+	discord, err := discord.NewSession(os.Getenv("DISCORD_WEBHOOK_URI"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	backend, err := smtp.NewBackend(
-		os.Getenv("DISCORD_WEBHOOK_URI"),
+		discord,
 		os.Getenv("SMTP_USERNAME"),
 		os.Getenv("SMTP_PASSWORD"),
 	)
