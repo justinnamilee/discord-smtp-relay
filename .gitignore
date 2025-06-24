@@ -8,4 +8,4 @@ discord-smtp-relay
 
 # default template folder
 etc/*
-!etc/message.example.tt
+!etc/template.example.json

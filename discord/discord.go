@@ -8,6 +8,7 @@ import (
   "net/mail"
   "strings"
   "text/template"
+  "time"
 )
 
 type Session struct {
@@ -16,7 +17,7 @@ type Session struct {
 }
 
 type TemplateParams struct {
-  Date, From, To, Subject, Body string
+  Date, From, To, Subject, Body, DateGet string
 }
 
 func New(discordWebhookURI, discordTemplatePath string) (*Session, error) {
@@ -59,6 +60,7 @@ func (s *Session) parseTemplate(r io.Reader) (string, error) {
 
   params := TemplateParams{
     Date: m.Header.Get("Date"),
+    DateGet: time.Now().Format(time.RFC1123Z),
     From: m.Header.Get("From"),
     To: m.Header.Get("To"),
     Subject: m.Header.Get("Subject"),
