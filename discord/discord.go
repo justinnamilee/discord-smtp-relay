@@ -2,11 +2,11 @@ package discord
 
 import (
   "bytes"
-  "encoding/json"
   "io"
   "io/ioutil"
   "net/http"
   "net/mail"
+  "strings"
   "text/template"
 )
 
@@ -19,19 +19,19 @@ type TemplateParams struct {
   Date, From, To, Subject, Body string
 }
 
-func New(discordWebhookUri, discordTemplatePath string) (*Session, error) {
+func New(discordWebhookURI, discordTemplatePath string) (*Session, error) {
   raw, err := ioutil.ReadFile(discordTemplatePath)
   if err != nil {
     return nil, err
   }
 
-  parsed, err := template.New("message").Parse(string(raw))
+  parsed, err := template.New("embed").Parse(string(raw))
   if err != nil {
     return nil, err
   }
 
   return &Session{
-    webhook: discordWebhookUri,
+    webhook: discordWebhookURI,
     template: discordTemplatePath,
     cached: parsed,
   }, nil
@@ -73,15 +73,14 @@ func (s *Session) parseTemplate(r io.Reader) (string, error) {
   return buf.String(), nil
 }
 
-func (s *Session) sendToDiscord(content string) error {
-  payload, err := json.Marshal(map[string]string{
-    "content": content,
-  })
+func (s *Session) sendToDiscord(payload string) error {
+  req, err := http.NewRequest("POST", s.webhook, strings.NewReader(payload))
   if err != nil {
     return err
   }
 
-  resp, err := http.Post(s.webhook, "application/json", bytes.NewBuffer(payload))
+  req.Header.Set("Content-Type", "application/json")
+  resp, err := http.DefaultClient.Do(req)
   if err != nil {
     return err
   }
