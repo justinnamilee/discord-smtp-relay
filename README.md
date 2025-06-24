@@ -1,6 +1,6 @@
 # 📬 discord-smtp-relay
 
-A tiny Go SMTP server that turns your incoming emails into **fancy Discord embeds**. Because plain text is so last decade. 🎉
+A tiny Go SMTP server that turns your incoming emails into **fancy Discord embeds**...Because plain text is so last decade. 🎉
 
 [![Go ≥1.15](https://img.shields.io/badge/go-%3E%3D1.15-blue.svg)](https://golang.org) [![MIT License](https://img.shields.io/github/license/justinnamilee/discord-smtp-relay.svg)](LICENSE)
 
@@ -29,7 +29,7 @@ git clone https://github.com/justinnamilee/discord-smtp-relay.git
 cd discord-smtp-relay
 go build -o discord-smtp-relay main.go
 
-...
+# ...
 ```
 
 ### Configuration
@@ -52,9 +52,10 @@ Set these environment variables before 🚀 launch:
 ### Run it!
 
 ```bash
-...
+# ...
 
-env WEBHOOK="https://discord.com/api/webhooks/…" TEMPLATE="etc/template.example.json" ./discord-smtp-relay
+env WEBHOOK="https://discord.com/api/webhooks/..." TEMPLATE="etc/template.example.json" \
+./discord-smtp-relay
 ```
 
 ---
@@ -92,7 +93,7 @@ printf '\0username\0password' | base64
 
 ## 🧩 Template Example
 
-This is the file that's at `etc/template.example.json`, the rest of that directory is in `.gitignore` so add as many new ones as you want...
+This is the file that's at `etc/template.example.json`, the rest of that directory is in `.gitignore` so add as many new ones as you want...  For more details on this please see [text/template](https://pkg.go.dev/text/template) and [Discord Embeds](https://discordjs.guide/popular-topics/embeds.html).  Feel free to submit ideas for new fields to support or new default templates to provide via issues or PR or w/e people normally do.
 
 <details>
 <summary>Click to expand</summary>
@@ -130,6 +131,13 @@ This is the file that's at `etc/template.example.json`, the rest of that directo
 ```
 
 </details>
+
+The fields supported right now are:
+- Subject
+- From
+- To
+- Date (*generated from SMTP sender*)
+- DateGet (*generated when we get the message*)
 
 ---
 
