@@ -29,7 +29,7 @@ func New(discord *discord.Session, username, password string) (*Backend, error) 
 
 // --- Important Discord Handling Part ---
 func (s *Session) Data(r io.Reader) error {
-  return s.backend.discord.message(r)
+  return s.backend.discord.Message(r)
 }
 
 

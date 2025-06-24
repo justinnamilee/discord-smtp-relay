@@ -37,7 +37,7 @@ func New(discordWebhookUri, discordTemplatePath string) (*Session, error) {
   }, nil
 }
 
-func (s *Session) message(r io.Reader) error {
+func (s *Session) Message(r io.Reader) error {
   msg, err := s.parseTemplate(r)
   if err != nil {
     return err

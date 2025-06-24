@@ -26,6 +26,8 @@ func getEnv(key string, required bool, def string) string {
 }
 
 func main() {
+  log.Print("Starting up...")
+
   //--- core settings
   webhookURL := getEnv("WEBHOOK",  true,  "")
   templatePath := getEnv("TEMPLATE", true,  "")
