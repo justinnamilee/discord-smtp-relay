@@ -27,10 +27,10 @@ func getEnv(key string, required bool, def string) string {
 
 func main() {
   //--- core settings
-  webhookURL   := getEnv("WEBHOOK",  true,  "")
+  webhookURL := getEnv("WEBHOOK",  true,  "")
   templatePath := getEnv("TEMPLATE", true,  "")
-  username     := getEnv("USERNAME", false, "discord")
-  password     := getEnv("PASSWORD", false, "discord")
+  username := getEnv("USERNAME", false, "discord")
+  password := getEnv("PASSWORD", false, "discord")
 
   //--- bind address
   bindHost := getEnv("HOST", false, "0.0.0.0")
@@ -76,12 +76,13 @@ func main() {
 
   //--- configure and start SMTP server
   server := gosmtp.NewServer(backend)
-  server.Addr            = listenAddr
-  server.Domain          = smtpDomain
-  server.ReadTimeout     = time.Duration(readSecs) * time.Second
-  server.WriteTimeout    = time.Duration(writeSecs) * time.Second
+
+  server.Addr = listenAddr
+  server.Domain = smtpDomain
+  server.ReadTimeout = time.Duration(readSecs) * time.Second
+  server.WriteTimeout = time.Duration(writeSecs) * time.Second
   server.MaxMessageBytes = sizeKB * 1024
-  server.MaxRecipients   = 1
+  server.MaxRecipients = 1
   server.AllowInsecureAuth = true
 
   log.Printf(
