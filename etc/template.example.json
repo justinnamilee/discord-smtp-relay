@@ -2,22 +2,22 @@
   "embeds": [
     {
       "title": "📨 {{ .Subject }}",
-      "description": "{{ printf '%q' .Body }}",
+      "description": {{ printf "%q" .Body }},
       "color": 5814783,
       "fields": [
         {
           "name": "From",
-          "value": "{{ printf '%q' .From }}",
+          "value": {{ printf "%q" .From }},
           "inline": true
         },
         {
           "name": "To",
-          "value": "{{ printf '%q' .To }}",
+          "value": {{ printf "%q" .To }},
           "inline": true
         },
         {
           "name": "Date",
-          "value": "{{ printf '%q' .Date }}",
+          "value": {{ printf "%q" .Date }},
           "inline": false
         }
       ],
