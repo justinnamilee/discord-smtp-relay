@@ -3,44 +3,63 @@ package main
 import (
   "log"
   "os"
+  "strconv"
+  "strings"
   "time"
+  "net/url"
 
   gosmtp "github.com/emersion/go-smtp"
-  "github.com/justinnamilee/discord-smtp-relay/smtp"
   "github.com/justinnamilee/discord-smtp-relay/discord"
+  "github.com/justinnamilee/discord-smtp-relay/smtp"
 )
 
-func main() {
-  discord, err := discord.NewSession(os.Getenv("WEBHOOK"), os.Getenv("TEMPLATE"))
+func getEnv(key string, required bool) string {
+  val := strings.TrimSpace(os.Getenv(key))
+  if required && val == "" {
+    log.Fatalf("Environment variable %s is required but not set or empty", key)
+  }
+  return val
+}
 
+func main() {
+  webhookURL := getEnv("WEBHOOK", true)
+  templatePath := getEnv("TEMPLATE", true)
+  username := getEnv("USERNAME", true)
+  password := getEnv("PASSWORD", true)
+
+  port := getEnv("PORT", false)
+  if port == "" {
+    port = "1025"
+  }
+  host := getEnv("HOST", false)
+  if host == "" {
+    host = "localhost"
+  }
+
+  if _, err := strconv.Atoi(port); err != nil {
+    log.Fatalf("Invalid PORT %q: %v", port, err)
+  }
+
+  if u, err := url.Parse(webhookURL); err != nil || u.Scheme == "" || u.Host == "" {
+    log.Fatalf("WEBHOOK is not a valid URL: %q", webhookURL)
+  }
+
+  if info, err := os.Stat(templatePath); err != nil || info.IsDir() {
+    log.Fatalf("TEMPLATE file %q does not exist or is a directory", templatePath)
+  }
+
+  discordSess, err := discord.NewSession(webhookURL, templatePath)
   if err != nil {
     log.Fatal(err)
   }
 
-  backend, err := smtp.NewBackend(
-    discord,
-    os.Getenv("USERNAME"),
-    os.Getenv("PASSWORD"),
-  )
-
+  backend, err := smtp.NewBackend(discordSess, username, password)
   if err != nil {
     log.Fatal(err)
   }
 
   server := gosmtp.NewServer(backend)
-
-  port := ":1025"
-  
-  if os.Getenv("PORT") != "" {
-    port = ":" + os.Getenv("PORT")
-  }
-
-  host := "localhost"
-  if os.Getenv("HOST") != "" {
-    host = os.Getenv("HOST")
-  }
-
-  server.Addr = port
+  server.Addr = ":" + port
   server.Domain = host
   server.ReadTimeout = 10 * time.Second
   server.WriteTimeout = 10 * time.Second
@@ -49,7 +68,6 @@ func main() {
   server.AllowInsecureAuth = true
 
   log.Println("Starting server at", server.Addr)
-
   if err := server.ListenAndServe(); err != nil {
     log.Fatal(err)
   }
