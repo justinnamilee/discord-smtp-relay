@@ -1,5 +1,6 @@
-# secrets
+# secrets and such
 .env
+ecosystem.config.js
 
 # build stuff
 _build/

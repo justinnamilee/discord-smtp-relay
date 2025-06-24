@@ -152,3 +152,5 @@ This project is licensed under the **MIT** License – see [LICENSE](LICENSE) fo
 > **Pro tip #2:** Pull requests, feature requests, and emoji suggestions are very welcome. 🎈
 
 > **Pro tip #3:** Chew your food before swallowing.
+
+> **Pro tip #4:** If you use PM2, there's an example ecosystem.config.js file for you.
