@@ -19,7 +19,7 @@ type TemplateParams struct {
   Date, From, To, Subject, Body string
 }
 
-func NewSession(discordWebhookUri, discordTemplatePath string) (*Session, error) {
+func New(discordWebhookUri, discordTemplatePath string) (*Session, error) {
   raw, err := ioutil.ReadFile(discordTemplatePath)
   if err != nil {
     return nil, err
@@ -37,7 +37,7 @@ func NewSession(discordWebhookUri, discordTemplatePath string) (*Session, error)
   }, nil
 }
 
-func (s *Session) Send(r io.Reader) error {
+func (s *Session) message(r io.Reader) error {
   msg, err := s.parseTemplate(r)
   if err != nil {
     return err

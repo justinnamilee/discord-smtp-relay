@@ -65,11 +65,11 @@ func main() {
   }
 
   //--- build Discord relay & SMTP backend
-  discordSess, err := discord.NewSession(webhookURL, templatePath)
+  discordSess, err := discord.New(webhookURL, templatePath)
   if err != nil {
     log.Fatal(err)
   }
-  backend, err := smtp.NewBackend(discordSess, username, password)
+  backend, err := smtp.New(discordSess, username, password)
   if err != nil {
     log.Fatal(err)
   }
