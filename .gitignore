@@ -1,1 +1,10 @@
+# secrets
 .env
+
+# build stuff
+_build/
+bin/
+
+# default template folder
+etc/*
+!etc/message.example.tt
