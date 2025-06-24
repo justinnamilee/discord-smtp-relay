@@ -12,86 +12,76 @@ import (
 
 type Session struct {
   webhook, template string
+  cached *template.Template
 }
 
 type TemplateParams struct {
   Date, From, To, Subject, Body string
 }
 
-func NewSession(discordWebhookUri string, discordTemplate string) (*Session, error) {
+func NewSession(discordWebhookUri, discordTemplatePath string) (*Session, error) {
+  raw, err := ioutil.ReadFile(discordTemplatePath)
+  if err != nil {
+    return nil, err
+  }
+
+  parsed, err := template.New("message").Parse(string(raw))
+  if err != nil {
+    return nil, err
+  }
+
   return &Session{
     webhook: discordWebhookUri,
-    template: discordTemplate,
+    template: discordTemplatePath,
+    cached: parsed,
   }, nil
 }
 
 func (s *Session) Send(r io.Reader) error {
-
-  msg, err := s.ParseTemplate(r)
+  msg, err := s.parseTemplate(r)
   if err != nil {
     return err
   }
 
-  err = s.SendToDiscord(msg)
-  if err != nil {
-    return err
-  }
-
-  return nil
+  return s.sendToDiscord(msg)
 }
 
-func (s *Session) ParseTemplate(r io.Reader) (string, error) {
+func (s *Session) parseTemplate(r io.Reader) (string, error) {
   m, err := mail.ReadMessage(r)
   if err != nil {
     return "", err
   }
 
-  body, err := ioutil.ReadAll(m.Body)
+  bodyBytes, err := ioutil.ReadAll(m.Body)
   if err != nil {
     return "", err
   }
 
-  header := m.Header
-  ttParams := TemplateParams{
-    header.Get("Date"),
-    header.Get("From"),
-    header.Get("To"),
-    header.Get("Subject"),
-    string(body),
+  params := TemplateParams{
+    Date: m.Header.Get("Date"),
+    From: m.Header.Get("From"),
+    To: m.Header.Get("To"),
+    Subject: m.Header.Get("Subject"),
+    Body: string(bodyBytes),
   }
-
-  // Template
-  tdat, err := ioutil.ReadFile(s.discordTemplate)
-  if err != nil {
-    return "", err
-  }
-
-  t := template.Must(template.New("message").Parse(string(tdat)))
 
   buf := new(bytes.Buffer)
-  err = t.Execute(buf, ttParams)
-  if err != nil {
+  if err := s.cached.Execute(buf, params); err != nil {
     return "", err
   }
 
   return buf.String(), nil
 }
 
-func (s *Session) SendToDiscord(content string) error {
-  reqBody, err := json.Marshal(
-    map[string]string{
-      "content": content,
-    },
-  )
+func (s *Session) sendToDiscord(content string) error {
+  payload, err := json.Marshal(map[string]string{
+    "content": content,
+  })
   if err != nil {
     return err
   }
 
-  resp, err := http.Post(
-    s.webhook,
-    "application/json",
-    bytes.NewBuffer(reqBody),
-  )
+  resp, err := http.Post(s.webhook, "application/json", bytes.NewBuffer(payload))
   if err != nil {
     return err
   }
