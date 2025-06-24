@@ -1,4 +1,4 @@
-module github.com/justinnamilee/discord-smtp-server
+module github.com/justinnamilee/discord-smtp-relay
 
 go 1.15
 
