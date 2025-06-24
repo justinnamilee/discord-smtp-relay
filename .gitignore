@@ -4,6 +4,7 @@
 # build stuff
 _build/
 bin/
+discord-smtp-relay
 
 # default template folder
 etc/*
