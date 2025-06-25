@@ -21,6 +21,7 @@ A tiny Go SMTP server that turns your incoming emails into **fancy Discord embed
 
 * Go 1.15+ (modules enabled)
 * A Discord **Incoming Webhook URL**
+* Common sense
 
 ### Installation
 
@@ -38,24 +39,26 @@ Set these environment variables before 🚀 launch:
 
 | Variable   | Required | Default     | Description                       |
 | :--------- | :------: | :---------- | :-------------------------------- |
-| `WEBHOOK`  |     ✅    | —           | Your Discord incoming webhook URL |
-| `TEMPLATE` |     ✅    | —           | Path to your JSON embed template  |
-| `USERNAME` |     ❌    | `discord`   | SMTP AUTH username (optional)     |
-| `PASSWORD` |     ❌    | `discord`   | SMTP AUTH password (optional)     |
-| `HOST`     |     ❌    | `0.0.0.0`   | Listen interface                  |
-| `PORT`     |     ❌    | `1025`      | Listen port                       |
-| `DOMAIN`   |     ❌    | `localhost` | EHLO/HELO domain                  |
-| `READ`     |     ❌    | `10`        | Read timeout (seconds)            |
-| `WRITE`    |     ❌    | `10`        | Write timeout (seconds)           |
-| `SIZE`     |     ❌    | `1024`      | Max message size (KB)             |
+| `WEBHOOK`  |    ✅    | —           | Your Discord incoming webhook URL |
+| `TEMPLATE` |    ✅    | —           | Path to your JSON embed template  |
+| `USERNAME` |    ❌    | `discord`   | SMTP AUTH username                |
+| `PASSWORD` |    ❌    | `discord`   | SMTP AUTH password                |
+| `HOST`     |    ❌    | `0.0.0.0`   | Listen interface                  |
+| `PORT`     |    ❌    | `1025`      | Listen port                       |
+| `DOMAIN`   |    ❌    | `localhost` | EHLO/HELO domain                  |
+| `READ`     |    ❌    | `10`        | Read timeout (seconds)            |
+| `WRITE`    |    ❌    | `10`        | Write timeout (seconds)           |
+| `SIZE`     |    ❌    | `1024`      | Max message size (KB)             |
 
 ### Run it!
 
 ```bash
 # ...
 
-env WEBHOOK="https://discord.com/api/webhooks/..." TEMPLATE="etc/template.example.json" \
-./discord-smtp-relay
+env \
+  WEBHOOK="https://discord.com/api/webhooks/..." \
+  TEMPLATE="etc/template.example.json" \
+  ./discord-smtp-relay
 ```
 
 ---
@@ -65,7 +68,7 @@ env WEBHOOK="https://discord.com/api/webhooks/..." TEMPLATE="etc/template.exampl
 Use your favorite SMTP client, or good old `telnet`:
 
 ```bash
-telnet localhost 1025
+$ telnet localhost 1025
 
 EHLO localhost
 AUTH PLAIN AGRpc2NvcmQAZGlzY29yZA==
