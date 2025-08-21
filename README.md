@@ -63,7 +63,7 @@ env \
 
 ---
 
-## 🔧 PM2 Installion or Docker Usage
+## 🔧 PM2 Installation or Docker Usage
 
 
 ### PM2 Installation
