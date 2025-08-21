@@ -1,0 +1,30 @@
+services:
+  discord-smtp-relay:
+    image: ghcr.io/justinnamilee/discord-smtp-relay:latest
+    container_name: discord-smtp-relay
+    restart: unless-stopped
+
+    ports:
+      - "1025:1025"
+
+    environment:
+      ## REQUIRED
+      WEBHOOK: "${WEBHOOK:?set your Discord webhook URL here}"
+      TEMPLATE: "${TEMPLATE:-/app/etc/template.example.json}"
+
+      ## OPTIONAL
+      USERNAME: "${USERNAME:-discord}"
+      PASSWORD: "${PASSWORD:-discord}"
+      HOST: "${HOST:-0.0.0.0}"
+      PORT: "${PORT:-1025}"
+      DOMAIN: "${DOMAIN:-localhost}"
+      READ: "${READ:-10}"
+      WRITE: "${WRITE:-10}"
+      SIZE: "${SIZE:-1024}"
+
+    ## Mount your template file/dir read-only, see TEMPLATE
+    # volumes:
+    #   # If you have etc/template.json in the repo, this binds it into the container:
+    #   - ./etc/template.json:/app/etc/template.json:ro
+    #   # Or mount the whole directory:
+    #   # - ./etc:/config:ro

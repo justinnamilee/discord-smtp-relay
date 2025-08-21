@@ -1,1 +1,16 @@
+# secrets and such
 .env
+ecosystem.config.js
+
+# build stuff
+_build/
+bin/
+discord-smtp-relay
+
+# default template folder
+etc/*
+!etc/template.example.json
+
+# docker
+compose.yml
+docker-compose.yml

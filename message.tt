@@ -1,6 +1,0 @@
-{{if .Subject }}
-== {{.Subject}} ==
-{{end}}
-{{if .Body }}
-{{.Body}}
-{{end}}

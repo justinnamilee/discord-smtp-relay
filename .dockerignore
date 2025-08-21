@@ -1,0 +1,20 @@
+# Go stuff
+/bin
+/out
+/build
+*.test
+*.coverprofile
+
+# VCS/editor
+.git
+.gitignore
+.vscode
+.idea
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Local templates / secrets
+etc/*.json
+!etc/template.example.json

@@ -1,52 +1,95 @@
 package main
 
 import (
-	"log"
-	"os"
-	"time"
+  "log"
+  "net"
+  "os"
+  "strconv"
+  "strings"
+  "time"
+  "net/url"
 
-	gosmtp "github.com/emersion/go-smtp"
-	"github.com/nullcosmos/discord-smtp-server/smtp"
-	"github.com/nullcosmos/discord-smtp-server/discord"
+  gosmtp "github.com/emersion/go-smtp"
+  "github.com/justinnamilee/discord-smtp-relay/discord"
+  "github.com/justinnamilee/discord-smtp-relay/smtp"
 )
 
+func getEnv(key string, required bool, def string) string {
+  v := strings.TrimSpace(os.Getenv(key))
+  if v == "" {
+    if required {
+      log.Fatalf("Environment variable %s is required but not set or empty", key)
+    }
+    return def
+  }
+  return v
+}
+
 func main() {
-	discord, err := discord.NewSession(os.Getenv("DISCORD_WEBHOOK_URI"))
-	if err != nil {
-		log.Fatal(err)
-	}
+  log.Print("Starting up...")
 
-	backend, err := smtp.NewBackend(
-		discord,
-		os.Getenv("SMTP_USERNAME"),
-		os.Getenv("SMTP_PASSWORD"),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
+  //--- core settings
+  webhookURL := getEnv("WEBHOOK",  true,  "")
+  templatePath := getEnv("TEMPLATE", true,  "")
+  username := getEnv("USERNAME", false, "discord")
+  password := getEnv("PASSWORD", false, "discord")
 
-	server := gosmtp.NewServer(backend)
+  //--- bind address
+  bindHost := getEnv("HOST", false, "0.0.0.0")
+  bindPort := getEnv("PORT", false, "1025")
+  if _, err := strconv.Atoi(bindPort); err != nil {
+    log.Fatalf("PORT must be numeric: %v", err)
+  }
+  listenAddr := net.JoinHostPort(bindHost, bindPort)
 
-	port := ":1025"
-	if os.Getenv("PORT") != "" {
-		port = ":" + os.Getenv("PORT")
-	}
+  //--- SMTP EHLO/HELO banner name
+  smtpDomain := getEnv("DOMAIN", false, "localhost")
+  if u, err := url.Parse("smtp://" + smtpDomain); err != nil || u.Hostname() == "" {
+    log.Fatalf("DOMAIN isn’t a valid hostname: %q", smtpDomain)
+  }
 
-	host := "localhost"
-	if os.Getenv("HOST") != "" {
-		host = os.Getenv("HOST")
-	}
+  readEnv := getEnv("READ", false, "10")
+  readSecs, err := strconv.Atoi(readEnv)
+  if err != nil {
+    log.Fatalf("Invalid READ value %q: %v", readEnv, err)
+  }
 
-	server.Addr = port
-	server.Domain = host
-	server.ReadTimeout = 10 * time.Second
-	server.WriteTimeout = 10 * time.Second
-	server.MaxMessageBytes = 1024 * 1024
-	server.MaxRecipients = 50
-	server.AllowInsecureAuth = true
+  writeEnv := getEnv("WRITE", false, "10")
+  writeSecs, err := strconv.Atoi(writeEnv)
+  if err != nil {
+    log.Fatalf("Invalid WRITE value %q: %v", writeEnv, err)
+  }
 
-	log.Println("Starting server at", server.Addr)
-	if err := server.ListenAndServe(); err != nil {
-		log.Fatal(err)
-	}
+  sizeEnv := getEnv("SIZE", false, "1024")
+  sizeKB, err := strconv.Atoi(sizeEnv)
+  if err != nil {
+    log.Fatalf("Invalid SIZE value %q: %v", sizeEnv, err)
+  }
+
+  //--- build Discord relay & SMTP backend
+  discordSess, err := discord.New(webhookURL, templatePath)
+  if err != nil {
+    log.Fatal(err)
+  }
+  backend, err := smtp.New(discordSess, username, password)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  //--- configure and start SMTP server
+  server := gosmtp.NewServer(backend)
+
+  server.Addr = listenAddr
+  server.Domain = smtpDomain
+  server.ReadTimeout = time.Duration(readSecs) * time.Second
+  server.WriteTimeout = time.Duration(writeSecs) * time.Second
+  server.MaxMessageBytes = sizeKB * 1024
+  server.MaxRecipients = 1
+  server.AllowInsecureAuth = true
+
+  log.Printf(
+    "SMTP listening on %s, advertising as %s (read=%ds write=%ds size=%dKB)",
+    listenAddr, smtpDomain, readSecs, writeSecs, sizeKB,
+  )
+  log.Fatal(server.ListenAndServe())
 }
