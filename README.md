@@ -82,7 +82,7 @@ pm2 save
 _**No need to download the repo or anything!**_
 
 ```bash
-wget 'https://github.com/justinnamilee/discord-smtp-relay/blob/main/compose.example.yml' -O compose.yml
+wget 'https://raw.githubusercontent.com/justinnamilee/discord-smtp-relay/refs/heads/main/compose.example.yml' -O compose.yml
 # edit the compose file as desired (set WEBHOOK, TEMPLATE)
 docker compose up -d
 ```
