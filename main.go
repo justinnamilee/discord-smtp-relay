@@ -31,8 +31,18 @@ func main() {
   //--- core settings
   webhookURL := getEnv("WEBHOOK",  true,  "")
   templatePath := getEnv("TEMPLATE", true,  "")
-  username := getEnv("USERNAME", false, "discord")
-  password := getEnv("PASSWORD", false, "discord")
+
+  anonymousEnv := getEnv("ANONYMOUS", false, "false")
+  anonymous, err := strconv.ParseBool(anonymousEnv)
+  if err != nil {
+    log.Fatalf("ANONYMOUS isn’t a valid boolean: %q", anonymousEnv)
+  }
+
+  username, password := "", ""
+  if !anonymous {
+    username = getEnv("USERNAME", false, "discord")
+    password = getEnv("PASSWORD", false, "discord")
+  }
 
   //--- bind address
   bindHost := getEnv("HOST", false, "0.0.0.0")

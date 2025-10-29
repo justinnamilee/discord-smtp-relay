@@ -19,6 +19,8 @@ module.exports = {
         // Optional SMTP AUTH credentials (default “discord”/“discord”)
         USERNAME: 'discord',
         PASSWORD: 'discord',
+        // Or disable AUTH PLAIN entirely
+        ANONYMOUS: 'false',
         // SMTP server listener settings
         HOST: '0.0.0.0',
         PORT: 1025,

@@ -37,18 +37,19 @@ go build -o discord-smtp-relay main.go
 
 Set these environment variables before 🚀 launch:
 
-| Variable   | Required | Default     | Description                       |
-| :--------- | :------: | :---------- | :-------------------------------- |
-| `WEBHOOK`  |    ✅    | —           | Your Discord incoming webhook URL |
-| `TEMPLATE` |    ✅    | —           | Path to your JSON embed template  |
-| `USERNAME` |    ❌    | `discord`   | SMTP AUTH username                |
-| `PASSWORD` |    ❌    | `discord`   | SMTP AUTH password                |
-| `HOST`     |    ❌    | `0.0.0.0`   | Listen interface                  |
-| `PORT`     |    ❌    | `1025`      | Listen port                       |
-| `DOMAIN`   |    ❌    | `localhost` | EHLO/HELO domain                  |
-| `READ`     |    ❌    | `10`        | Read timeout (seconds)            |
-| `WRITE`    |    ❌    | `10`        | Write timeout (seconds)           |
-| `SIZE`     |    ❌    | `1024`      | Max message size (KB)             |
+| Variable    | Required | Default     | Description                               |
+| :---------- | :------: | :---------- | :---------------------------------------- |
+| `WEBHOOK`   |    ✅    | —           | Your Discord incoming webhook URL         |
+| `TEMPLATE`  |    ✅    | —           | Path to your JSON embed template          |
+| `USERNAME`  |    ❌    | `discord`   | SMTP AUTH username (AUTH PLAIN only)      |
+| `PASSWORD`  |    ❌    | `discord`   | SMTP AUTH password (AUTH PLAIN only)      |
+| `ANONYMOUS` |    ❌    | `false`     | Enable anonymous login, disable SMTP AUTH |
+| `HOST`      |    ❌    | `0.0.0.0`   | Listen interface                          |
+| `PORT`      |    ❌    | `1025`      | Listen port                               |
+| `DOMAIN`    |    ❌    | `localhost` | EHLO/HELO domain                          |
+| `READ`      |    ❌    | `10`        | Read timeout (seconds)                    |
+| `WRITE`     |    ❌    | `10`        | Write timeout (seconds)                   |
+| `SIZE`      |    ❌    | `1024`      | Max message size (KB)                     |
 
 ### Run it!
 

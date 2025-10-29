@@ -15,6 +15,7 @@ services:
       ## OPTIONAL
       USERNAME: "${USERNAME:-discord}"
       PASSWORD: "${PASSWORD:-discord}"
+      ANONYMOUS: "${ANONYMOUS:-false}"
       HOST: "${HOST:-0.0.0.0}"
       PORT: "${PORT:-1025}"
       DOMAIN: "${DOMAIN:-localhost}"

@@ -36,7 +36,7 @@ func (s *Session) Data(r io.Reader) error {
 // generic SMTP wrappers for stuff
 
 func (b *Backend) Login(state *smtp.ConnectionState, username, password string) (smtp.Session, error) {
-  if username != b.username || password != b.password {
+  if b.username == "" || username != b.username || password != b.password {
     return nil, errors.New("Invalid username or password")
   }
 
@@ -46,7 +46,13 @@ func (b *Backend) Login(state *smtp.ConnectionState, username, password string) 
 }
 
 func (b *Backend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, error) {
-  return nil, smtp.ErrAuthRequired
+  if b.username == "" && b.password == "" {
+    return &Session{
+      backend: b,
+    }, nil
+  } else {
+    return nil, smtp.ErrAuthRequired
+  }
 }
 
 func (s *Session) Mail(from string, opts smtp.MailOptions) error {
