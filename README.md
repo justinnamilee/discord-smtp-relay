@@ -2,7 +2,7 @@
 
 A tiny Go SMTP server that turns your incoming emails into **fancy Discord embeds**...Because plain text is so last decade. 🎉
 
-[![Go ≥1.15](https://img.shields.io/badge/go-%3E%3D1.15-blue.svg)](https://golang.org) [![MIT License](https://img.shields.io/github/license/justinnamilee/discord-smtp-relay.svg)](LICENSE)
+[![Go ≥1.15](https://img.shields.io/badge/go-%3E%3D1.15-blue.svg)](https://golang.org) [![ghcr pulls](https://img.shields.io/badge/dynamic/json?url=https://ghcr-badge.elias.eu.org/api/justinnamilee/discord-smtp-relay/discord-smtp-relay&query=downloadCount&label=ghcr%20pulls)](https://github.com/justinnamilee/discord-smtp-relay/pkgs/container/discord-smtp-relay) [![MIT License](https://img.shields.io/github/license/justinnamilee/discord-smtp-relay.svg)](LICENSE)
 
 ---
 
