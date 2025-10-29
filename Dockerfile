@@ -22,7 +22,7 @@ FROM alpine:3.20
 WORKDIR /app
 
 # Certificates (HTTPS to Discord webhooks)
-RUN apk add --no-cache ca-certificates tzdata
+RUN apk add --no-cache ca-certificates tzdata netcat-openbsd
 
 # Copy binary
 COPY --from=builder /out/discord-smtp-relay /app/discord-smtp-relay
@@ -39,7 +39,7 @@ USER appuser
 EXPOSE 1025/tcp
 
 # Healthcheck: TCP open on the SMTP port
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD /bin/sh -c "exec 3<>/dev/tcp/127.0.0.1/${PORT:-1025} && exec 3>&-"
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 --start-period=10s CMD nc -z -w 2 127.0.0.1 ${PORT:-1025} || exit 1
 
 # Entrypoint
 ENTRYPOINT ["/app/discord-smtp-relay"]
