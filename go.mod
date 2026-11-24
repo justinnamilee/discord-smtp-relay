@@ -1,7 +1,7 @@
 module github.com/justinnamilee/discord-smtp-relay
 
-require (
-  github.com/emersion/go-smtp v0.14.0
-  golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2 // indirect
-  golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd // indirect
-)
+go 1.27.0
+
+require github.com/emersion/go-smtp v0.26.0
+
+require github.com/emersion/go-sasl v0.0.0-20241020182733-b788ff22d5a6 // indirect
