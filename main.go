@@ -93,7 +93,7 @@ func main() {
   server.Domain = smtpDomain
   server.ReadTimeout = time.Duration(readSecs) * time.Second
   server.WriteTimeout = time.Duration(writeSecs) * time.Second
-  server.MaxMessageBytes = sizeKB * 1024
+  server.MaxMessageBytes = int64(sizeKB) * 1024
   server.MaxRecipients = 1
   server.AllowInsecureAuth = true
 
